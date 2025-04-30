@@ -45,6 +45,12 @@ type ValidatePinPayload = {
 };
 
 
+type ChangePinPayload = {
+  accountNumber: string;
+  pin: number;
+  newPin: number;
+};
+
 
 type TransactionResponse = {
   message: string;

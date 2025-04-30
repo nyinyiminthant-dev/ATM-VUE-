@@ -14,6 +14,8 @@ class API {
   atm = atm
   verify = verify
   createPin = createPin
+
+
 }
 
 const api = new API()

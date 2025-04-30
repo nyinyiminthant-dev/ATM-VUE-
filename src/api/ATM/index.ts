@@ -97,4 +97,20 @@ export const validatePin = {
             ...opt,
         });
     },
+
+};
+
+
+
+export const ChangePin = {
+  useMutation: (opt?: Partial<UseMutationOptions<TransactionResponse, Error, ChangePinPayload>>) => {
+      return useMutation<TransactionResponse, Error, ChangePinPayload>({
+          mutationFn: async (payload: ChangePinPayload) => {
+              const response = await axios.post(`ATM/ChangePIn?accountNumber=${payload.accountNumber}&pin=${payload.pin}&newPin=${payload.newPin}`);
+              return response.data;
+          },
+          ...opt,
+      });
+  },
+
 };
