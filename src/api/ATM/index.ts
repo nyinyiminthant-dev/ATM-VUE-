@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useMutation, type UseMutationOptions } from "@tanstack/vue-query";
 import {useQuery, type UseQueryOptions} from "@tanstack/vue-query";
+
+
+
 export const withdraw = {
     useMutation: (opt?: Partial<UseMutationOptions<TransactionResponse, Error, WithdrawPayload>>) => {
         return useMutation<TransactionResponse, Error, WithdrawPayload>({
@@ -40,6 +43,35 @@ export const checkBalance = {
     });
   },
 };
+
+
+export const history = {
+  useQuery: (
+    accountNumber: string,
+    opt?: Partial<UseQueryOptions<Transaction[], Error>>
+  ) => {
+    return useQuery<Transaction[], Error>({
+      queryKey: ['ATM', 'GetAll', accountNumber],
+      queryFn: async (): Promise<Transaction[]> => {
+        const response = await axios.get(`ATM/GetAll?accountNumber=${accountNumber}`);
+        const rawData: RawTransaction[] = response.data.data;
+
+        return rawData.map((txn) => ({
+          accountNumber: txn.accountNumber,
+          date: txn.transactionDate,
+          type: txn.transactionType,
+          amount: txn.amount,
+        }));
+      },
+      ...opt,
+    });
+  },
+};
+
+
+
+
+
 
 
 export const transfer = {

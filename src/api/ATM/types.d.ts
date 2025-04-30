@@ -17,6 +17,20 @@ type BalancePayload = {
 
 };
 
+type Transaction = {
+  accountNumber: string;
+  date: string;
+  type: string;
+  amount: number;
+};
+
+type RawTransaction = {
+  accountNumber: string;
+  transactionDate: string;
+  transactionType: string;
+  amount: number;
+};
+
 type TransferPayload = {
   fromAccountNumber: string;
   toAccountNumber: string;

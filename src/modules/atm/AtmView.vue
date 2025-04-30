@@ -75,8 +75,8 @@ const cancelExit = () => {
         </div>
         <div class="space-y-4">
           <Button class="bank-action-btn" @click="openComponent('BalanceInquiry')">Check Balance</Button>
-          <Button :disabled="true" class="bank-action-btn" @click="openComponent('MiniStatement')">Mini Statement</Button>
-          <Button :disabled="true" class="bank-action-btn" @click="openComponent('ChangePin')">Change PIN</Button>
+          <Button  class="bank-action-btn" @click="openComponent('MiniStatement')">Transation History</Button>
+          <Button  class="bank-action-btn" @click="openComponent('ChangePin')">Change PIN</Button>
         </div>
       </CardContent>
 
