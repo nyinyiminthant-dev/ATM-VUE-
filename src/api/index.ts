@@ -1,12 +1,12 @@
 
 import * as products from './products'
-import * as login from './Login'
-import * as register from './Register'
-import * as atm from './ATM'
+import * as login from './login'
+import * as register from './register'
+import * as atm from './atm'
 import * as verify from './verifyAccount'
 import * as createPin from './createPin'
 
-import * as ResentOTP from './ResentOTP'
+import * as ResentOTP from './restendOtp'
 
 class API {
   products = products
