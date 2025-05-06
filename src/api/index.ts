@@ -6,6 +6,8 @@ import * as atm from './ATM'
 import * as verify from './verifyAccount'
 import * as createPin from './createPin'
 
+import * as ResentOTP from './ResentOTP'
+
 class API {
   products = products
 
@@ -14,6 +16,7 @@ class API {
   atm = atm
   verify = verify
   createPin = createPin
+  ResentOTP = ResentOTP
 
 
 }

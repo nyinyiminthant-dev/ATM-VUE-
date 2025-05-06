@@ -121,7 +121,7 @@ const cancelExit = () => {
   text-align: center;
   color: #fff;
   cursor: pointer;
-  display: flex;
+  display: flex-wrap;
   align-items: center;
   width: 500px;
   height: 50px;

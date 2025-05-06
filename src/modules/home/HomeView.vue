@@ -20,10 +20,8 @@ const goToBank = () => router.push({ name: 'bank' });
       Welcome to Nyi Bank
     </h1>
 
-    <!-- Card Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-      
-      <!-- ATM Card -->
+
       <Card @click="goToATM" class="group cursor-pointer bg-gradient-to-br from-[#0072a0] to-[#003b5c] text-center text-white p-10 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
         <CardContent>
           <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🏧</div>
@@ -32,7 +30,6 @@ const goToBank = () => router.push({ name: 'bank' });
         </CardContent>
       </Card>
 
-      <!-- Bank Card -->
       <Card @click="goToBank" class="group cursor-pointer bg-gradient-to-br from-[#0072a0] to-[#003b5c] text-center text-white p-10 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl">
         <CardContent>
           <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🏦</div>

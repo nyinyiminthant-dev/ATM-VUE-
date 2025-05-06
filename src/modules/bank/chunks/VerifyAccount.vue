@@ -32,11 +32,18 @@ const { mutate: verifyAccount } = api.verify.verifyAccount.useMutation({
       return;
     }
 
-    const innerData = data.data;
-    if (innerData === null || innerData.status === "N") {
-      toast.error('Account is not active.');
+
+    if (data.message === "Invalid OTP.") {
+      toast.error('Invalid OTP.');
       return;
     }
+
+
+    if (data.message === "OTP expired.") {
+      toast.error('OTP expired.');
+      return;
+    }
+
 
     toast.success('Verify Account is successful!');
     emit('done');
@@ -90,7 +97,7 @@ const onSubmit = form.handleSubmit((values) => {
 
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
-      <h2 class="text-xl font-semibold"> Register New User</h2>
+      <h2 class="text-xl font-semibold"> Verify Account</h2>
       <button @click="$emit('done')" class="text-sm text-red-300 hover:underline">Close</button>
     </div>
 

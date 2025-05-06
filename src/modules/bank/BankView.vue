@@ -5,6 +5,7 @@ import RegisterUser from './chunks/RegisterUser.vue';
 import VerifyAccount from './chunks/VerifyAccount.vue';
 import UnlockAccount from './chunks/UnlockAccount.vue';
 import Createpin from './chunks/CreatePin.vue';
+import ResendOTP from './chunks/ResendOTP.vue';
 import UpdateUserForm from './chunks/UpdateUserForm.vue';
 import router from '@/router';
 import Button from '@/components/ui/button/Button.vue';
@@ -14,7 +15,8 @@ const components = {
   VerifyAccount,
   UnlockAccount,
   Createpin,
-  UpdateUserForm
+  UpdateUserForm,
+  ResendOTP
 } as const;
 
 type ComponentKey = keyof typeof components;
@@ -78,6 +80,10 @@ const cancelExit = () => {
       </Button> -->
       <Button class="bank-action-btn" @click="openComponent('Createpin')">
          Create PIN
+      </Button>
+
+      <Button class="bank-action-btn" @click="openComponent('ResendOTP')">
+        Resend OTP
       </Button>
     </div>
 
