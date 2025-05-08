@@ -64,27 +64,65 @@ const cancelExit = () => {
   <div class="w-full h-screen flex items-center justify-center bg-gradient-to-br from-[#005f85] to-[#004a6e] p-6 text-white overflow-auto">
     <Card class="w-full max-w-none p-8 space-y-8 backdrop-blur-lg bg-white/30 rounded-lg">
       <CardHeader class="text-center">
-        <CardTitle class="text-3xl drop-shadow-lg"> Welcome to  ATM</CardTitle>
+        <CardTitle class="text-3xl drop-shadow-lg">Welcome to ATM</CardTitle>
       </CardHeader>
 
-      <CardContent class="grid grid-cols-2 gap-4 m-l-6">
+      <CardContent class="grid grid-cols-2 gap-4 ml-6">
         <div class="space-y-4">
-          <Button class="bank-action-btn" @click="openComponent('Withdraw')">Withdraw</Button>
-          <Button class="bank-action-btn" @click="openComponent('Deposit')">Deposit</Button>
-          <Button class="bank-action-btn" @click="openComponent('Transfer')">Transfer</Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('Withdraw')"
+          >
+            Withdraw
+          </Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('Deposit')"
+          >
+            Deposit
+          </Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('Transfer')"
+          >
+            Transfer
+          </Button>
         </div>
         <div class="space-y-4">
-          <Button class="bank-action-btn" @click="openComponent('BalanceInquiry')">Check Balance</Button>
-          <Button  class="bank-action-btn" @click="openComponent('MiniStatement')">Transation History</Button>
-          <Button  class="bank-action-btn" @click="openComponent('ChangePin')">Change PIN</Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('BalanceInquiry')"
+          >
+            Check Balance
+          </Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('MiniStatement')"
+          >
+            Transaction History
+          </Button>
+          <Button
+            class="w-[500px] h-[50px] ml-10 mt-5 bg-white/10 border border-white/30 text-white rounded-xl font-semibold text-base backdrop-blur transition hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg"
+            @click="openComponent('ChangePin')"
+          >
+            Change PIN
+          </Button>
         </div>
       </CardContent>
 
       <div class="flex justify-center mt-4">
-        <button class="exit-btn" @click="exitDashboard">Exit</button>
+        <button
+          @click="exitDashboard"
+          class="px-6 py-3 bg-red-500/10 border border-red-400 text-white font-semibold rounded-xl transition hover:bg-red-500/20 hover:scale-[1.02] hover:shadow-lg backdrop-blur"
+        >
+          Exit
+        </button>
       </div>
 
-      <div v-if="responseMessage" class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mt-4 shadow-md border border-white/20 text-gray-100">
+      <div
+        v-if="responseMessage"
+        class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mt-4 shadow-md border border-white/20 text-gray-100"
+      >
         <h2 class="text-xl font-semibold mb-2">Response</h2>
         <pre class="whitespace-pre-wrap">{{ responseMessage }}</pre>
       </div>
@@ -97,77 +135,23 @@ const cancelExit = () => {
     </Card>
   </div>
 
-  <div v-if="showExitDialog" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+  <div
+    v-if="showExitDialog"
+    class="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+  >
     <div class="bg-white text-black p-6 rounded-xl shadow-lg w-96">
       <h3 class="text-lg font-semibold mb-4">Exit Dashboard</h3>
       <p class="mb-6">Are you sure you want to exit the ATM?</p>
       <div class="flex justify-end gap-4">
-        <button @click="cancelExit" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+        <button
+          @click="cancelExit"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Cancel
+        </button>
         <button @click="confirmExit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Exit</button>
       </div>
     </div>
   </div>
 </template>
-<style scoped>
-.bank-action-btn {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
-  display: flex-wrap;
-  align-items: center;
-  width: 500px;
-  height: 50px;
-  margin-left: 40px;
-  margin-top: 20px;
-  justify-content: center;
-}
 
-.bank-action-btn i {
-  margin-right: 8px;
-  font-size: 1.2rem;
-}
-
-.bank-action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.exit-btn {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.exit-btn:hover {
-  background: rgba(255, 0, 0, 0.2);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.disabled-btn {
-  pointer-events: none;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-</style>

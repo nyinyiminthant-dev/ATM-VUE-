@@ -8,10 +8,10 @@ const props = defineProps<{
 </script>
 
 <template>
-  <tr
-    data-slot="table-row"
-    :class="cn('hover:bg-blue-400/50 data-[state=selected]:bg-muted border-b transition-colors', props.class)"
+  <span
+    data-slot="dropdown-menu-shortcut"
+    :class="cn('text-muted-foreground ml-auto text-xs tracking-widest', props.class)"
   >
     <slot />
-  </tr>
+  </span>
 </template>

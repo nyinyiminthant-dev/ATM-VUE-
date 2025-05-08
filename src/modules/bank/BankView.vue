@@ -3,19 +3,15 @@
 import { ref } from 'vue';
 import RegisterUser from './chunks/RegisterUser.vue';
 import VerifyAccount from './chunks/VerifyAccount.vue';
-import UnlockAccount from './chunks/UnlockAccount.vue';
 import Createpin from './chunks/CreatePin.vue';
 import ResendOTP from './chunks/ResendOTP.vue';
-import UpdateUserForm from './chunks/UpdateUserForm.vue';
 import router from '@/router';
 import Button from '@/components/ui/button/Button.vue';
 
 const components = {
   RegisterUser,
   VerifyAccount,
-  UnlockAccount,
   Createpin,
-  UpdateUserForm,
   ResendOTP
 } as const;
 
@@ -58,38 +54,48 @@ const cancelExit = () => {
 
 
 <template>
-<div class="w-full h-screen bg-gradient-to-br from-[#004a6e] to-[#002f4b] p-6 text-white overflow-auto">
-
+  <div class="w-full h-screen bg-gradient-to-br from-[#004a6e] to-[#002f4b] p-6 text-white overflow-auto">
     <div class="mb-8 text-center">
       <h1 class="text-4xl font-bold drop-shadow-lg">🏦 Welcome To Nyi Dashboard</h1>
       <p class="text-gray-200 mt-2">Request user accounts and banking operations</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-      <Button class="bank-action-btn" @click="openComponent('RegisterUser')">
+      <Button
+        class="bg-white/10 border border-white/30 px-6 py-4 rounded-2xl font-semibold text-white backdrop-blur transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:scale-105 shadow-md flex justify-center items-center"
+        @click="openComponent('RegisterUser')"
+      >
         Register
       </Button>
-      <!-- <Button class="bank-action-btn" @click="openComponent('UpdateUserForm')">
-         Update User
-      </Button> -->
-      <Button class="bank-action-btn" @click="openComponent('VerifyAccount')">
+
+      <Button
+        class="bg-white/10 border border-white/30 px-6 py-4 rounded-2xl font-semibold text-white backdrop-blur transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:scale-105 shadow-md flex justify-center items-center"
+        @click="openComponent('VerifyAccount')"
+      >
         Verify Account
       </Button>
-      <!-- <Button class="bank-action-btn" @click="openComponent('UnlockAccount')">
-         Unlock Account
-      </Button> -->
-      <Button class="bank-action-btn" @click="openComponent('Createpin')">
-         Create PIN
+
+      <Button
+        class="bg-white/10 border border-white/30 px-6 py-4 rounded-2xl font-semibold text-white backdrop-blur transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:scale-105 shadow-md flex justify-center items-center"
+        @click="openComponent('Createpin')"
+      >
+        Create PIN
       </Button>
 
-      <Button class="bank-action-btn" @click="openComponent('ResendOTP')">
+      <Button
+        class="bg-white/10 border border-white/30 px-6 py-4 rounded-2xl font-semibold text-white backdrop-blur transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:scale-105 shadow-md flex justify-center items-center"
+        @click="openComponent('ResendOTP')"
+      >
         Resend OTP
       </Button>
     </div>
 
     <div class="flex justify-center mt-6">
-      <button class="exit-btn" @click="exitDashboard">
-         Exit
+      <button
+        @click="exitDashboard"
+        class="bg-red-500/10 border border-red-500/30 px-6 py-4 rounded-2xl font-semibold text-white backdrop-blur transition-all duration-300 hover:bg-red-500/20 hover:-translate-y-0.5 hover:scale-105 shadow-md flex justify-center items-center"
+      >
+        Exit
       </button>
     </div>
 
@@ -117,56 +123,3 @@ const cancelExit = () => {
   </div>
 </template>
 
-
-<style scoped>
-.bank-action-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bank-action-btn i {
-  margin-right: 8px;
-  font-size: 1.2rem;
-}
-
-.bank-action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.exit-btn {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  text-align: center;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.exit-btn:hover {
-  background: rgba(255, 0, 0, 0.2);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-</style>

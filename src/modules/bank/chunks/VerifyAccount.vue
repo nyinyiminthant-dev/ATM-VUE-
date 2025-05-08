@@ -18,12 +18,10 @@ import FormMessage from '@/components/ui/form/FormMessage.vue';
 const emit = defineEmits(['done']);
 
 const router = useRouter();
-const loaderStore = useLoaderStore();
+const { loadingOn, loadingOff } = useLoaderStore()
 
 const { mutate: verifyAccount } = api.verify.verifyAccount.useMutation({
-  onMutate: () => {
-    loaderStore.startLoading();
-  },
+  onMutate: loadingOn,
   onSuccess: (data) => {
     console.log('Verify Account response:', data);
 
@@ -32,18 +30,15 @@ const { mutate: verifyAccount } = api.verify.verifyAccount.useMutation({
       return;
     }
 
-
     if (data.message === "Invalid OTP.") {
       toast.error('Invalid OTP.');
       return;
     }
 
-
     if (data.message === "OTP expired.") {
       toast.error('OTP expired.');
       return;
     }
-
 
     toast.success('Verify Account is successful!');
     emit('done');
@@ -55,7 +50,7 @@ const { mutate: verifyAccount } = api.verify.verifyAccount.useMutation({
   },
   onSettled: () => {
     console.log('Verify Account attempt finished');
-    loaderStore.stopLoading();
+    loadingOff();
   },
 });
 
@@ -87,101 +82,48 @@ const onSubmit = form.handleSubmit((values) => {
 <template>
 
 
-
-  <div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-  <div class="loader"></div>
-</div>
-
-
-
-
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
-      <h2 class="text-xl font-semibold"> Verify Account</h2>
+      <h2 class="text-xl font-semibold">Verify Account</h2>
       <button @click="$emit('done')" class="text-sm text-red-300 hover:underline">Close</button>
     </div>
 
     <form @submit="onSubmit" class="space-y-4 w-full">
-        <FormField  name="accountNumber" :form="form">
-          <FormItem>
-            <FormLabel>Account Number</FormLabel>
-            <FormControl>
-              <Field name="accountNumber" v-slot="{ field }">
-                <Input
+      <FormField name="accountNumber" :form="form">
+        <FormItem>
+          <FormLabel>Account Number</FormLabel>
+          <FormControl>
+            <Field name="accountNumber" v-slot="{ field }">
+              <Input
                 v-bind="field"
                 placeholder="Enter your Account Number"
-                class="shadcn-input"
+                class="bg-white/10 border border-white/30 p-3 rounded-lg text-white"
               />
-              </Field>
+            </Field>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
 
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <FormField  name="OTP" :form="form">
-          <FormItem>
-            <FormLabel> OTP</FormLabel>
-            <FormControl>
-              <Field name="OTP" v-slot="{ field }">
-                <Input
+      <FormField name="OTP" :form="form">
+        <FormItem>
+          <FormLabel>OTP</FormLabel>
+          <FormControl>
+            <Field name="OTP" v-slot="{ field }">
+              <Input
                 v-bind="field"
-                placeholder="Enter your OTP "
-                class="shadcn-input"
+                placeholder="Enter your OTP"
+                class="bg-white/10 border border-white/30 p-3 rounded-lg text-white"
               />
-              </Field>
+            </Field>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
 
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <Button type="submit" class="w-full mt-4">
-          Verify
-        </Button>
-      </form>
-
-    </div>
-
-
-
+      <Button type="submit" class="w-full mt-4 bg-blue-500 p-3 rounded-lg text-white hover:bg-blue-600">
+        Verify
+      </Button>
+    </form>
+  </div>
 </template>
-
-
-<style scoped>
-.shadcn-input {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #ffffff30;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.shadcn-btn-primary {
-  background-color: #00a6dc;
-  padding: 0.75rem;
-  font-weight: bold;
-  border-radius: 0.75rem;
-  color: white;
-  transition: all 0.2s;
-}
-
-.shadcn-btn-primary:hover {
-  background-color: #008ac2;
-}
-
-.loader {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #159157;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-</style>

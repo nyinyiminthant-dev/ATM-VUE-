@@ -12,7 +12,7 @@ import { useLoaderStore } from '@/stores/loaderStore';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 
 const emit = defineEmits(['done']);
-const loaderStore = useLoaderStore();
+const { loadingOn, loadingOff } = useLoaderStore()
 
 const formSchema = toTypedSchema(z.object({
   accountNumber: z.string().min(5, 'Account number must be at least 5 characters'),
@@ -24,9 +24,7 @@ const form = useForm({
 });
 
 const { mutate: createPin } = api.createPin.createPin.useMutation({
-  onMutate: () => {
-    loaderStore.startLoading();
-  },
+  onMutate: loadingOn,
   onSuccess: (data) => {
     if (data.message === 'PIN created successfully!') {
       toast.success(data.message);
@@ -39,7 +37,7 @@ const { mutate: createPin } = api.createPin.createPin.useMutation({
     toast.error(error.message || 'Something went wrong');
   },
   onSettled: () => {
-    loaderStore.stopLoading();
+    loadingOff();
   },
 });
 
@@ -52,9 +50,7 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-    <div class="loader"></div>
-  </div>
+
 
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
@@ -68,7 +64,7 @@ const onSubmit = form.handleSubmit((values) => {
           <FormLabel>Account Number</FormLabel>
           <FormControl>
             <Field name="accountNumber" v-slot="{ field }">
-              <Input type="text" placeholder="Enter your account number" class="shadcn-input" v-bind="field" />
+              <Input type="text" placeholder="Enter your account number" class="bg-white/10 border border-white/30 p-3 rounded-lg text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
@@ -80,51 +76,14 @@ const onSubmit = form.handleSubmit((values) => {
           <FormLabel>New PIN</FormLabel>
           <FormControl>
             <Field name="pin" v-slot="{ field }">
-              <Input type="password" placeholder="Enter new PIN" class="shadcn-input" v-bind="field" />
+              <Input type="password" placeholder="Enter new PIN" class="bg-white/10 border border-white/30 p-3 rounded-lg text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
 
-      <Button type="submit" class="shadcn-btn-primary">Set PIN</Button>
+      <Button type="submit" class="bg-blue-500 text-white py-3 px-6 font-semibold rounded-lg hover:bg-blue-600 transition-colors">Set PIN</Button>
     </form>
   </div>
 </template>
-
-<style scoped>
-.shadcn-input {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #ffffff30;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.shadcn-btn-primary {
-  background-color: #00a6dc;
-  padding: 0.75rem;
-  font-weight: bold;
-  border-radius: 0.75rem;
-  color: white;
-  transition: all 0.2s;
-}
-
-.shadcn-btn-primary:hover {
-  background-color: #008ac2;
-}
-
-.loader {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #159157;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

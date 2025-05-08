@@ -8,30 +8,28 @@ import * as z from 'zod';
 import { toTypedSchema } from '@vee-validate/zod';
 import api from '@/api';
 import { useLoaderStore } from '@/stores/loaderStore';
-
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['done']);
 
 const router = useRouter();
-const loaderStore = useLoaderStore();
-const accountNumber = localStorage.getItem('accountNumber');
+const { loadingOn, loadingOff } = useLoaderStore()
+
+const accountNumber =api.getUserAccountNumberFromToken();
 
 if (!accountNumber) {
   toast.error('Account number not found');
   emit('done');
- router.push('/login');
+  router.push('/login');
   throw new Error('No account number');
 }
 
 const { mutate: withdrawMoney } = api.atm.withdraw.useMutation({
-  onMutate: () => loaderStore.startLoading(),
+  onMutate: loadingOn,
   onSuccess: (data) => {
     if (data.message === 'Withdrawal successful') {
       toast.success('Withdraw successful');
-
-
       return;
     } else if (data.message === 'Insufficient balance') {
       toast.error('Insufficient balance');
@@ -44,7 +42,7 @@ const { mutate: withdrawMoney } = api.atm.withdraw.useMutation({
   onError: (error) => {
     toast.error(error.message);
   },
-  onSettled: () => loaderStore.stopLoading(),
+  onSettled: () =>  loadingOff(),
 });
 
 const formSchema = toTypedSchema(z.object({
@@ -68,9 +66,7 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-    <div class="loader"></div>
-  </div>
+
 
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
@@ -79,13 +75,12 @@ const onSubmit = form.handleSubmit((values) => {
     </div>
 
     <form @submit="onSubmit" class="space-y-4">
-
       <FormField name="amount" :form="form">
         <FormItem>
           <FormLabel>Withdraw Amount</FormLabel>
           <FormControl>
             <Field name="amount" v-slot="{ field }">
-              <Input type="number" placeholder="Enter amount (min 1000)" class="shadcn-input" v-bind="field" />
+              <Input type="number" placeholder="Enter amount (min 1000)" class="bg-white/10 border border-white/30 p-3 rounded-lg text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
@@ -94,54 +89,17 @@ const onSubmit = form.handleSubmit((values) => {
 
       <FormField name="pin" :form="form">
         <FormItem>
-          <FormLabel> PIN</FormLabel>
+          <FormLabel>PIN</FormLabel>
           <FormControl>
             <Field name="pin" v-slot="{ field }">
-              <Input type="password" placeholder="Enter PIN" class="shadcn-input" v-bind="field" />
+              <Input type="password" placeholder="Enter PIN" class="bg-white/10 border border-white/30 p-3 rounded-lg text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
         </FormItem>
-        </FormField>
+      </FormField>
 
-      <Button type="submit" class="shadcn-btn-primary">Withdraw</Button>
+      <Button type="submit" class="bg-blue-500 py-3 font-bold rounded-lg text-white hover:bg-blue-600">Withdraw</Button>
     </form>
   </div>
 </template>
-
-<style scoped>
-.shadcn-input {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #ffffff30;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.shadcn-btn-primary {
-  background-color: #00a6dc;
-  padding: 0.75rem;
-  font-weight: bold;
-  border-radius: 0.75rem;
-  color: white;
-  transition: all 0.2s;
-}
-
-.shadcn-btn-primary:hover {
-  background-color: #008ac2;
-}
-
-.loader {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #159157;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

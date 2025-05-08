@@ -14,9 +14,9 @@ import { useRouter } from 'vue-router';
 const emit = defineEmits(['done']);
 
 const router = useRouter();
-const loaderStore = useLoaderStore();
-const fromAccountNumber = localStorage.getItem('accountNumber');
+const { loadingOn, loadingOff } = useLoaderStore()
 
+const fromAccountNumber =api.getUserAccountNumberFromToken();
 if (!fromAccountNumber) {
   toast.error('Account number not found');
   emit('done');
@@ -25,11 +25,10 @@ if (!fromAccountNumber) {
 }
 
 const { mutate: transferMoney } = api.atm.transfer.useMutation({
-  onMutate: () => loaderStore.startLoading(),
+  onMutate: loadingOn,
   onSuccess: (data) => {
     if (data.message === 'Transfer successful') {
       toast.success('Transfer successful');
-
     } else if (data.message === 'Insufficient balance') {
       toast.error('Insufficient balance');
     } else if (data.message === 'Invalid account or amount') {
@@ -41,7 +40,7 @@ const { mutate: transferMoney } = api.atm.transfer.useMutation({
   onError: (error) => {
     toast.error(error.message);
   },
-  onSettled: () => loaderStore.stopLoading(),
+  onSettled: () => loadingOff(),
 });
 
 const formSchema = toTypedSchema(z.object({
@@ -66,9 +65,7 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-    <div class="loader"></div>
-  </div>
+
 
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
@@ -82,7 +79,7 @@ const onSubmit = form.handleSubmit((values) => {
           <FormLabel>Receiver Account Number</FormLabel>
           <FormControl>
             <Field name="toAccountNumber" v-slot="{ field }">
-              <Input type="text" placeholder="Enter receiver's account number" class="shadcn-input" v-bind="field" />
+              <Input type="text" placeholder="Enter receiver's account number" class="bg-white/10 border border-white/30 p-3 rounded-xl text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
@@ -94,7 +91,7 @@ const onSubmit = form.handleSubmit((values) => {
           <FormLabel>Transfer Amount</FormLabel>
           <FormControl>
             <Field name="amount" v-slot="{ field }">
-              <Input type="number" placeholder="Enter amount (min 1000)" class="shadcn-input" v-bind="field" />
+              <Input type="number" placeholder="Enter amount (min 1000)" class="bg-white/10 border border-white/30 p-3 rounded-xl text-white" v-bind="field" />
             </Field>
           </FormControl>
           <FormMessage />
@@ -106,51 +103,14 @@ const onSubmit = form.handleSubmit((values) => {
           <FormLabel>PIN</FormLabel>
           <FormControl>
             <Field name="pin" v-slot="{ field }">
-              <Input type="password" placeholder="Enter PIN" class="shadcn-input" v-bind="field" />
+              <Input type="password" placeholder="Enter PIN" class="bg-white/10 border border-white/30 p-3 rounded-xl text-white" v-bind="field" />
             </Field>
-          </FormControl>
+            </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
 
-      <Button type="submit" class="shadcn-btn-primary">Transfer</Button>
+      <Button type="submit" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-all hover:bg-blue-400">Transfer</Button>
     </form>
   </div>
 </template>
-
-<style scoped>
-.shadcn-input {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #ffffff30;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.shadcn-btn-primary {
-  background-color: #00a6dc;
-  padding: 0.75rem;
-  font-weight: bold;
-  border-radius: 0.75rem;
-  color: white;
-  transition: all 0.2s;
-}
-
-.shadcn-btn-primary:hover {
-  background-color: #008ac2;
-}
-
-.loader {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #159157;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

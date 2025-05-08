@@ -18,10 +18,10 @@ import FormMessage from '@/components/ui/form/FormMessage.vue';
 const emit = defineEmits(['done']);
 
 const router = useRouter();
-const loaderStore = useLoaderStore();
+const { loadingOn, loadingOff } = useLoaderStore()
 
 const { mutate: resendOTP } = api.ResentOTP.ResendOTP.useMutation({
-  onMutate: () => loaderStore.startLoading(),
+  onMutate: loadingOn,
 
   onSuccess: (data) => {
     console.log('Resend OTP response:', data);
@@ -41,8 +41,6 @@ const { mutate: resendOTP } = api.ResentOTP.ResendOTP.useMutation({
         return;
     }
 
-
-
     toast.success("OTP has been resent!");
     emit('done');
     router.push('/bank');
@@ -53,7 +51,7 @@ const { mutate: resendOTP } = api.ResentOTP.ResendOTP.useMutation({
     console.error("Resend OTP error:", error);
   },
 
-  onSettled: () => loaderStore.stopLoading(),
+  onSettled: () => loadingOff(),
 });
 
 const formSchema = toTypedSchema(
@@ -75,9 +73,7 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-    <div class="loader"></div>
-  </div>
+
 
   <div class="bg-white/10 p-6 rounded-xl border border-white/20 mt-6 shadow-lg text-white">
     <div class="flex justify-between mb-4">
@@ -94,7 +90,7 @@ const onSubmit = form.handleSubmit((values) => {
               <Input
                 v-bind="field"
                 placeholder="Enter your Account Number"
-                class="shadcn-input"
+                class="bg-white/10 border border-white/30 p-3 rounded-lg text-white"
               />
             </Field>
           </FormControl>
@@ -102,31 +98,7 @@ const onSubmit = form.handleSubmit((values) => {
         </FormItem>
       </FormField>
 
-      <Button type="submit" class="w-full mt-4">Resend OTP</Button>
+      <Button type="submit" class="w-full mt-4 bg-blue-500 p-3 rounded-lg text-white hover:bg-blue-400">Resend OTP</Button>
     </form>
   </div>
 </template>
-
-<style scoped>
-.shadcn-input {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #ffffff30;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: white;
-}
-
-.loader {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #159157;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

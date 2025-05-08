@@ -14,13 +14,10 @@ import { useLoaderStore } from '@/stores/loaderStore';
 
 const router = useRouter()
 const loginAttempts = ref(0)
-const loaderStore = useLoaderStore()
+const { loadingOn, loadingOff } = useLoaderStore();
 
 const { mutate } = api.login.login.useMutation({
-
-  onMutate: () => {
-    loaderStore.startLoading()
-  },
+  onMutate: loadingOn,
 
   onSuccess: (data) => {
     console.log('Login response:', data)
@@ -55,7 +52,7 @@ const { mutate } = api.login.login.useMutation({
   },
   onSettled: () => {
     console.log('Login attempt finished')
-    loaderStore.stopLoading();
+    loadingOff();
   }
 })
 
@@ -80,9 +77,7 @@ const onSubmit = form.handleSubmit((values) => {
 <template>
 
 
-<div v-if="loaderStore.isLoading" class="absolute inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
-  <div class="loader"></div>
-</div>
+
 
 
   <div class="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 p-6">
