@@ -55,7 +55,7 @@ const columnVisibility = ref<VisibilityState>({})
 
   const pagination = ref({
   pageIndex: 0,
-  pageSize: 10,
+  pageSize: 5,
 })
 
 const table = useVueTable({
@@ -113,14 +113,14 @@ const table = useVueTable({
       </DropdownMenu>
     </div>
 
-    <div class="rounded-lg border border-border">
+    <div class="rounded-lg border border-border bg-background shadow-sm overflow-hidden">
       <Table>
-        <TableHeader>
+        <TableHeader class="bg-muted/50 border-b border-border">
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
             <TableHead
               v-for="header in headerGroup.headers" :key="header.id" :data-pinned="header.column.getIsPinned()"
               :class="cn(
-                { 'sticky bg-background': header.column.getIsPinned() },
+                { 'sticky bg-muted/50': header.column.getIsPinned() },
                 header.column.getIsPinned() === 'left' ? 'left-0' : 'right-0',
               )"
             >
@@ -131,20 +131,21 @@ const table = useVueTable({
         <TableBody>
           <template v-if="table.getRowModel().rows?.length">
             <template v-for="row in table.getRowModel().rows" :key="row.id">
-              <TableRow :data-state="row.getIsSelected() && 'selected'">
+              <TableRow :data-state="row.getIsSelected() && 'selected'" class="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
                 <TableCell
                   v-for="cell in row.getVisibleCells()" :key="cell.id" :data-pinned="cell.column.getIsPinned()"
                   :class="cn(
                     { 'sticky bg-background': cell.column.getIsPinned() },
                     cell.column.getIsPinned() === 'left' ? 'left-0' : 'right-0',
+                    'p-3'
                   )"
                 >
                   <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
                 </TableCell>
               </TableRow>
               <TableRow v-if="row.getIsExpanded()">
-                <TableCell :colspan="row.getAllCells().length">
-                  {{ JSON.stringify(row.original) }}
+                <TableCell :colspan="row.getAllCells().length" class="p-4 bg-muted/30">
+                  <pre class="text-xs text-muted-foreground">{{ JSON.stringify(row.original, null, 2) }}</pre>
                 </TableCell>
               </TableRow>
             </template>
@@ -162,10 +163,9 @@ const table = useVueTable({
       </Table>
     </div>
 
-    <div class="flex items-center justify-end space-x-4 py-4">
-      <div class="flex-1 text-sm text-muted-foreground">
-        {{ table.getFilteredSelectedRowModel().rows.length }} of
-        {{ table.getFilteredRowModel().rows.length }} row(s) selected.
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2">
+      <div class="text-sm text-muted-foreground">
+        Showing {{ (table.getState().pagination.pageIndex * table.getState().pagination.pageSize) + 1 }} to {{ Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, table.getFilteredRowModel().rows.length) }} of {{ table.getFilteredRowModel().rows.length }} rows
       </div>
       <div class="flex items-center space-x-2">
         <Button
@@ -186,7 +186,7 @@ const table = useVueTable({
         </Button>
         <div class="text-sm text-muted-foreground">
           Page {{ table.getState().pagination.pageIndex + 1 }} of
-          {{ Math.ceil(table.getFilteredRowModel().rows.length / table.getState().pagination.pageSize) }}
+          {{ table.getPageCount() }}
         </div>
       </div>
     </div>

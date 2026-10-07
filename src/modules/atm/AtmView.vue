@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQueryClient } from '@tanstack/vue-query'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -28,8 +29,10 @@ import {
   BalanceInquiry,
 } from './chunks'
 import { CreditCard, Wallet, ArrowLeftRight, List, Key, LogOut, ChevronLeft, DollarSign } from 'lucide-vue-next'
+import { checkBalance } from '@/api/atm'
 
 const router = useRouter()
+const queryClient = useQueryClient()
 
 const components = {
   Withdraw,
@@ -47,19 +50,52 @@ const isDialogOpen = ref(false)
 const responseMessage = ref('')
 const showExitDialog = ref(false)
 
-const balance = computed(() => localStorage.getItem('balance') || '0')
+const balance = ref(localStorage.getItem('balance') || '0')
 const accountNumber = computed(() => localStorage.getItem('accountNumber') || '')
+
+const refreshBalance = async () => {
+  if (!accountNumber.value) return
+  try {
+    // Invalidate and refetch
+    await queryClient.invalidateQueries({ queryKey: ['ATM', 'CheckBalance', accountNumber.value] })
+    await queryClient.refetchQueries({ queryKey: ['ATM', 'CheckBalance', accountNumber.value] })
+    
+    // Use fetchQuery to get fresh data directly
+    const freshData = await queryClient.fetchQuery({
+      queryKey: ['ATM', 'CheckBalance', accountNumber.value],
+      queryFn: async () => {
+        const axios = (await import('axios')).default
+        const response = await axios.get(`ATM/CheckBalance?accountNumber=${accountNumber.value}`)
+        return response.data.data.amount
+      }
+    })
+    
+    if (freshData !== undefined && freshData !== null) {
+      const balanceNum = Number(freshData)
+      if (!isNaN(balanceNum)) {
+        balance.value = balanceNum.toString()
+        localStorage.setItem('balance', balanceNum.toString())
+      }
+    }
+  } catch (error) {
+    console.error('Failed to refresh balance:', error)
+  }
+}
 
 const openDialog = (key: ComponentKey) => {
   activeDialog.value = key
   isDialogOpen.value = true
 }
 
-const closeDialog = () => {
+const closeDialog = async () => {
+  console.log('closeDialog called, refreshing balance...')
   isDialogOpen.value = false
   setTimeout(() => {
     activeDialog.value = null
   }, 200)
+  // Refresh balance after any transaction dialog closes
+  await refreshBalance()
+  console.log('Balance refreshed:', balance.value)
 }
 
 const setResponse = (msg: string) => {
@@ -107,6 +143,11 @@ const getActionIconColor = (key: ComponentKey) => {
   const action = atmActions.find(a => a.key === key)
   return action?.iconColor || 'text-primary'
 }
+
+// Initial balance fetch on mount
+onMounted(() => {
+  refreshBalance()
+})
 </script>
 
 <template>

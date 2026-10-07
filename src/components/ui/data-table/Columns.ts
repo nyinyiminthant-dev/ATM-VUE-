@@ -6,17 +6,17 @@ export const columns: ColumnDef<Transaction>[] = [
 
   {
     accessorKey: 'accountNumber',
-    header: () => h('div', { class: 'text-right text-white' }, 'AccountNumber'),
+    header: () => h('div', { class: 'text-right font-medium text-foreground' }, 'Account Number'),
     cell: ({ row }) => {
       const accountNumber = row.getValue('accountNumber')
-      return h('div', { class: 'text-right font-medium text-white' }, String(accountNumber))
+      return h('div', { class: 'text-right text-foreground' }, String(accountNumber))
     }
   },
 
 
   {
     accessorKey: 'date',
-    header: () => h('div', { class: 'text-right text-white'}, 'Date'),
+    header: () => h('div', { class: 'text-right font-medium text-foreground' }, 'Date'),
     cell: ({ row }) => {
       const rawDate = row.getValue('date')
       const parsedDate = Date.parse(String(rawDate))
@@ -31,26 +31,25 @@ export const columns: ColumnDef<Transaction>[] = [
             hour12: true,
           })
 
-      return h('div', { class: 'text-right font-medium text-white' }, formattedDate)
+      return h('div', { class: 'text-right text-foreground' }, formattedDate)
     },
   },
 
   {
     accessorKey: 'type',
-    header: () => h('div', { class: 'text-right text-white' }, 'Type'),
+    header: () => h('div', { class: 'text-right font-medium text-foreground' }, 'Type'),
     cell: ({ row }) => {
       const type = row.getValue('type')
-      return h('div', { class: 'text-right font-medium text-white' }, String(type))
+      return h('div', { class: 'text-right text-foreground' }, String(type))
     }
   },
 
 
 
 
-
   {
     accessorKey: 'amount',
-    header: () => h('div', { class: 'text-right text-white' }, 'Amount'),
+    header: () => h('div', { class: 'text-right font-medium text-foreground' }, 'Amount'),
     cell: ({ row }) => {
       const rawAmount = row.getValue('amount')
       const amount = Number.parseFloat(String(rawAmount))
@@ -61,7 +60,7 @@ export const columns: ColumnDef<Transaction>[] = [
             maximumFractionDigits: 0,
           }).format(amount) + ' MMK'
 
-      return h('div', { class: 'text-right font-medium text-green-400 font-semibold ' }, formatted)
+      return h('div', { class: 'text-right text-success font-semibold' }, formatted)
     }
   }
 

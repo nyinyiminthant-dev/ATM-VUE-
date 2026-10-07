@@ -4,6 +4,8 @@ import { X } from 'lucide-vue-next'
 import {
   DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogTitle,
   type DialogContentEmits,
   type DialogContentProps,
   DialogOverlay,
