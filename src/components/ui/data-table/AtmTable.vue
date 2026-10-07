@@ -53,13 +53,9 @@ const columnVisibility = ref<VisibilityState>({})
   const expanded = ref<ExpandedState>({})
 
 
-
-
-
-
   const pagination = ref({
   pageIndex: 0,
-  pageSize: 5,
+  pageSize: 10,
 })
 
 const table = useVueTable({
@@ -88,16 +84,16 @@ const table = useVueTable({
 
 <template>
   <div class="w-full">
-    <div class="flex gap-2 items-center py-4">
+    <div class="flex flex-col sm:flex-row gap-2 items-center justify-between py-4">
       <Input
-        class="max-w-sm text-white placeholder:text-white"
+        class="max-w-sm"
         placeholder="Filter Type..."
         :model-value="table.getColumn('type')?.getFilterValue() as string"
         @update:model-value=" table.getColumn('type')?.setFilterValue($event)"
       />
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-          <Button variant="outline" class="ml-auto ">
+          <Button variant="outline" size="sm">
             Columns <ChevronDown class="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -117,14 +113,14 @@ const table = useVueTable({
       </DropdownMenu>
     </div>
 
-    <div class="rounded-md border border-gray-300">
+    <div class="rounded-lg border border-border">
       <Table>
         <TableHeader>
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
             <TableHead
               v-for="header in headerGroup.headers" :key="header.id" :data-pinned="header.column.getIsPinned()"
               :class="cn(
-                { 'sticky bg-black': header.column.getIsPinned() },
+                { 'sticky bg-background': header.column.getIsPinned() },
                 header.column.getIsPinned() === 'left' ? 'left-0' : 'right-0',
               )"
             >
@@ -139,7 +135,7 @@ const table = useVueTable({
                 <TableCell
                   v-for="cell in row.getVisibleCells()" :key="cell.id" :data-pinned="cell.column.getIsPinned()"
                   :class="cn(
-                    { 'sticky bg-black': cell.column.getIsPinned() },
+                    { 'sticky bg-background': cell.column.getIsPinned() },
                     cell.column.getIsPinned() === 'left' ? 'left-0' : 'right-0',
                   )"
                 >
@@ -157,9 +153,9 @@ const table = useVueTable({
           <TableRow v-else>
             <TableCell
               :colspan="columns.length"
-              class="h-24 text-center text-red-500"
+              class="h-24 text-center text-muted-foreground"
             >
-              No results.
+              No transactions found.
             </TableCell>
           </TableRow>
         </TableBody>
@@ -167,7 +163,7 @@ const table = useVueTable({
     </div>
 
     <div class="flex items-center justify-end space-x-4 py-4">
-      <div class="flex-1 text-sm text-white">
+      <div class="flex-1 text-sm text-muted-foreground">
         {{ table.getFilteredSelectedRowModel().rows.length }} of
         {{ table.getFilteredRowModel().rows.length }} row(s) selected.
       </div>
@@ -188,7 +184,7 @@ const table = useVueTable({
         >
           Next
         </Button>
-        <div class="text-sm text-white">
+        <div class="text-sm text-muted-foreground">
           Page {{ table.getState().pagination.pageIndex + 1 }} of
           {{ Math.ceil(table.getFilteredRowModel().rows.length / table.getState().pagination.pageSize) }}
         </div>

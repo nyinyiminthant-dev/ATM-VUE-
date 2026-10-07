@@ -1,0 +1,6 @@
+export { default as Withdraw } from './WithDraw.vue'
+export { default as Deposit } from './DepoSit.vue'
+export { default as Transfer } from './TransFer.vue'
+export { default as MiniStatement } from './MiniStatement.vue'
+export { default as ChangePin } from './ChangePin.vue'
+export { default as BalanceInquiry } from './BalanceInquiry.vue'

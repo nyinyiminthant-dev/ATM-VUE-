@@ -9,9 +9,15 @@ export const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-card text-card-foreground',
+        default: 'bg-card text-card-foreground border-border',
         destructive:
-          'text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90',
+          'text-destructive bg-destructive/10 border-destructive/20 [&>svg]:text-destructive *:data-[slot=alert-description]:text-destructive/90',
+        success:
+          'text-success bg-success/10 border-success/20 [&>svg]:text-success *:data-[slot=alert-description]:text-success/90',
+        warning:
+          'text-warning bg-warning/10 border-warning/20 [&>svg]:text-warning *:data-[slot=alert-description]:text-warning/90',
+        info:
+          'text-primary bg-primary/10 border-primary/20 [&>svg]:text-primary *:data-[slot=alert-description]:text-primary/90',
       },
     },
     defaultVariants: {

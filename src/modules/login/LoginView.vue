@@ -8,68 +8,68 @@ import { toast } from 'vue-sonner'
 import api from '@/api'
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import Button from '@/components/ui/button/Button.vue'
-import Input from '@/components/ui/input/Input.vue'
-import { useLoaderStore } from '@/stores/loaderStore';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Field } from 'vee-validate'
+import { Loader2, Lock, User, Building2 } from 'lucide-vue-next'
+import { useLoaderStore } from '@/stores/loaderStore'
 
 const router = useRouter()
 const loginAttempts = ref(0)
-const { loadingOn, loadingOff } = useLoaderStore();
+const { loadingOn, loadingOff } = useLoaderStore()
 
 const { mutate } = api.login.login.useMutation({
   onMutate: loadingOn,
 
-onSuccess: (data: any) => {
-  console.log('Login response:', data)
+  onSuccess: (data: { message?: string; data?: { token?: string; accountNumber?: string; balance?: number; passwordStatus?: boolean } }) => {
+    console.log('Login response:', data)
 
-  // 1. Response validation
-  if (!data || data.message === 'Invalid username or password.') {
-    toast.error('Invalid username or password.')
-    return
-  }
-
-  const innerData = data?.data
-
-  if (!innerData) {
-    toast.error('No data received from server.')
-    return
-  }
-
-  // 2. Password မမှန်သည့် အခြေအနေ စစ်ဆေးခြင်း
-  if (innerData.passwordStatus === false) {
-    loginAttempts.value++
-    toast.error(`Incorrect password. Attempt ${loginAttempts.value}/3`)
-    if (loginAttempts.value >= 3) {
-      toast.error('Too many failed login attempts. Restarting...')
-      setTimeout(() => location.reload(), 1500)
+    if (!data || data.message === 'Invalid username or password.') {
+      toast.error('Invalid username or password.')
+      return
     }
-    return
-  }
 
-  // 3. LocalStorage ထဲသို့ သေချာစွာ သိမ်းဆည်းခြင်း (Null safe ပြုလုပ်ထားပါသည်)
-  if (innerData.token) {
-    localStorage.setItem('token', innerData.token)
-    localStorage.setItem('accountNumber', innerData.accountNumber || '')
-    localStorage.setItem('balance', (innerData.balance ?? 0).toString())
+    const innerData = data?.data
 
-    console.log('Saved to LocalStorage:', {
-      token: localStorage.getItem('token'),
-      accountNumber: localStorage.getItem('accountNumber')
-    })
+    if (!innerData) {
+      toast.error('No data received from server.')
+      return
+    }
 
-    toast.success('Login successful!')
-    router.push('/atm')
-  } else {
-    toast.error('Token is missing in response!')
-  }
-},
+    if (innerData.passwordStatus === false) {
+      loginAttempts.value++
+      toast.error(`Incorrect password. Attempt ${loginAttempts.value}/3`)
+      if (loginAttempts.value >= 3) {
+        toast.error('Too many failed login attempts. Restarting...')
+        setTimeout(() => location.reload(), 1500)
+      }
+      return
+    }
+
+    if (innerData.token) {
+      localStorage.setItem('token', innerData.token)
+      localStorage.setItem('accountNumber', innerData.accountNumber || '')
+      localStorage.setItem('balance', (innerData.balance ?? 0).toString())
+
+      console.log('Saved to LocalStorage:', {
+        token: localStorage.getItem('token'),
+        accountNumber: localStorage.getItem('accountNumber')
+      })
+
+      toast.success('Login successful!')
+      router.push('/atm')
+    } else {
+      toast.error('Token is missing in response!')
+    }
+  },
   onError: (error) => {
     toast.error('Login failed. Check console for details.')
     console.error('Login error:', error)
   },
   onSettled: () => {
     console.log('Login attempt finished')
-    loadingOff();
+    loadingOff()
   }
 })
 
@@ -92,59 +92,80 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6">
+    <div class="w-full max-w-md animate-in">
+      <Card variant="elevated" class="overflow-hidden">
+        <CardHeader class="text-center pb-4 border-b border-border/50">
+          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Building2 class="h-7 w-7" aria-hidden="true" />
+          </div>
+          <CardTitle class="text-2xl font-bold">Welcome Back</CardTitle>
+          <p class="text-muted-foreground mt-1">Sign in to your Nyi Bank account</p>
+        </CardHeader>
 
+        <CardContent class="space-y-4">
+          <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="accountNumber" :form="form">
+              <FormItem>
+                <FormLabel>Account Number</FormLabel>
+                <FormControl>
+                  <div class="relative">
+                    <User class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Field name="accountNumber" v-slot="{ field }">
+                      <Input
+                        type="text"
+                        placeholder="Enter your account number"
+                        class="pl-10"
+                        :error="!!form.errors.value?.accountNumber"
+                        v-bind="field"
+                      />
+                    </Field>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
 
+            <FormField name="password" :form="form">
+              <FormItem>
+                <div class="flex items-center justify-between">
+                  <FormLabel>Password</FormLabel>
+                </div>
+                <FormControl>
+                  <div class="relative">
+                    <Lock class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Field name="password" v-slot="{ field }">
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        class="pl-10 pr-10"
+                        :error="!!form.errors.value?.password"
+                        v-bind="field"
+                      />
+                    </Field>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            </FormField>
 
+            <Button
+              type="submit"
+              variant="banking"
+              size="lg"
+              class="w-full"
+            >
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
 
-
-  <div class="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 p-6">
-    <div class="w-full max-w-md bg-white/70 backdrop-blur-lg rounded-2xl shadow-2xl p-8 flex flex-col items-center space-y-6">
-      <h1 class="text-3xl font-bold text-blue-900">ATM Login</h1>
-
-      <div class="bg-blue-600 p-3 rounded-full">
-        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 2a4 4 0 00-4 4v4H7a3 3 0 00-3 3v8a3 3 0 003 3h14a3 3 0 003-3v-8a3 3 0 00-3-3h-1V6a4 4 0 00-4-4zM10 6a2 2 0 114 0v4H10V6z" />
-        </svg>
-      </div>
-
-      <form @submit.prevent="onSubmit" class="space-y-4 w-full">
-        <FormField v-slot="{ componentField }" name="accountNumber">
-          <FormItem>
-            <FormLabel>Account Number</FormLabel>
-            <FormControl>
-              <Input
-                v-bind="componentField"
-                placeholder="Enter your Account Number"
-                class="w-full rounded-md px-4 py-2 text-sm bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="password">
-          <FormItem>
-            <FormLabel>Password</FormLabel>
-            <FormControl>
-              <Input
-                v-bind="componentField"
-                type="password"
-                placeholder="Enter your password"
-                class="w-full rounded-md px-4 py-2 text-sm bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <Button
-          type="submit"
-          class="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 rounded-md shadow-md transition duration-300"
-        >
-          Login
-        </Button>
-      </form>
+        <CardFooter class="border-t border-border/50 pt-4">
+          <p class="text-center text-sm text-muted-foreground">
+            &copy; 2026 Nyi Bank. All rights reserved.
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   </div>
 </template>
