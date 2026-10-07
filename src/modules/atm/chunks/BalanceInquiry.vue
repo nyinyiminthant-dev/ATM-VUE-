@@ -9,7 +9,7 @@ const balance = ref<number | null>(null);
   const { loadingOn, loadingOff } = useLoaderStore()
 const router = useRouter();
 
-const accountNumber =api.getUserAccountNumberFromToken();
+const accountNumber = localStorage.getItem('accountNumber');
 
 if (!accountNumber) {
   toast.error('No account number found');

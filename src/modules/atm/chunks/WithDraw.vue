@@ -16,7 +16,8 @@ const emit = defineEmits(['done']);
 const router = useRouter();
 const { loadingOn, loadingOff } = useLoaderStore()
 
-const accountNumber =api.getUserAccountNumberFromToken();
+// const accountNumber =api.getUserAccountNumberFromToken();
+const accountNumber = localStorage.getItem('accountNumber');
 
 if (!accountNumber) {
   toast.error('Account number not found');
@@ -74,7 +75,7 @@ const onSubmit = form.handleSubmit((values) => {
       <button @click="$emit('done')" class="text-sm text-red-300 hover:underline">Close</button>
     </div>
 
-    <form @submit="onSubmit" class="space-y-4">
+    <form @submit.prevent="onSubmit" class="space-y-4">
       <FormField name="amount" :form="form">
         <FormItem>
           <FormLabel>Withdraw Amount</FormLabel>

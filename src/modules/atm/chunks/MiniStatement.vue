@@ -4,7 +4,7 @@ import AtmTable from '../../../components/ui/data-table/AtmTable.vue';
 import {columns} from '../../../components/ui/data-table/Columns';
 import api from '@/api';
 
-const accountNumber =api.getUserAccountNumberFromToken();
+const accountNumber = localStorage.getItem('accountNumber');
 
 if(!accountNumber) {
   toast({ variant: 'destructive', title: 'No Account Number Found' });

@@ -19,33 +19,50 @@ const { loadingOn, loadingOff } = useLoaderStore();
 const { mutate } = api.login.login.useMutation({
   onMutate: loadingOn,
 
-  onSuccess: (data) => {
-    console.log('Login response:', data)
+onSuccess: (data: any) => {
+  console.log('Login response:', data)
 
-    if (data.message === 'Invalid username or password.') {
-      toast.error('Invalid username or password.')
-      return
+  // 1. Response validation
+  if (!data || data.message === 'Invalid username or password.') {
+    toast.error('Invalid username or password.')
+    return
+  }
+
+  const innerData = data?.data
+
+  if (!innerData) {
+    toast.error('No data received from server.')
+    return
+  }
+
+  // 2. Password မမှန်သည့် အခြေအနေ စစ်ဆေးခြင်း
+  if (innerData.passwordStatus === false) {
+    loginAttempts.value++
+    toast.error(`Incorrect password. Attempt ${loginAttempts.value}/3`)
+    if (loginAttempts.value >= 3) {
+      toast.error('Too many failed login attempts. Restarting...')
+      setTimeout(() => location.reload(), 1500)
     }
+    return
+  }
 
-    const innerData = data.data
-
-    if (innerData?.passwordStatus === false && innerData?.accountStatus === true) {
-      loginAttempts.value++
-      toast.error(`Incorrect password. Attempt ${loginAttempts.value}/3`)
-      if (loginAttempts.value >= 3) {
-        toast.error('Too many failed login attempts. Restarting...')
-        setTimeout(() => location.reload(), 1500)
-      }
-      return
-    }
-
+  // 3. LocalStorage ထဲသို့ သေချာစွာ သိမ်းဆည်းခြင်း (Null safe ပြုလုပ်ထားပါသည်)
+  if (innerData.token) {
     localStorage.setItem('token', innerData.token)
-    localStorage.setItem('accountNumber', innerData.accountNumber)
-    localStorage.setItem('balance', innerData.balance.toString())
+    localStorage.setItem('accountNumber', innerData.accountNumber || '')
+    localStorage.setItem('balance', (innerData.balance ?? 0).toString())
+
+    console.log('Saved to LocalStorage:', {
+      token: localStorage.getItem('token'),
+      accountNumber: localStorage.getItem('accountNumber')
+    })
 
     toast.success('Login successful!')
     router.push('/atm')
-  },
+  } else {
+    toast.error('Token is missing in response!')
+  }
+},
   onError: (error) => {
     toast.error('Login failed. Check console for details.')
     console.error('Login error:', error)
@@ -91,7 +108,7 @@ const onSubmit = form.handleSubmit((values) => {
         </svg>
       </div>
 
-      <form @submit="onSubmit" class="space-y-4 w-full">
+      <form @submit.prevent="onSubmit" class="space-y-4 w-full">
         <FormField v-slot="{ componentField }" name="accountNumber">
           <FormItem>
             <FormLabel>Account Number</FormLabel>

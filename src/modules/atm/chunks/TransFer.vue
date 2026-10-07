@@ -16,7 +16,7 @@ const emit = defineEmits(['done']);
 const router = useRouter();
 const { loadingOn, loadingOff } = useLoaderStore()
 
-const fromAccountNumber =api.getUserAccountNumberFromToken();
+const fromAccountNumber = localStorage.getItem('accountNumber');
 if (!fromAccountNumber) {
   toast.error('Account number not found');
   emit('done');
