@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineOptions({ name: 'AppLoader' })
 
+import { ref, computed, onMounted } from 'vue'
 import { useLoaderStore } from '@/stores/loaderStore'
 import { useIsFetching } from '@tanstack/vue-query'
 import { storeToRefs } from 'pinia'
@@ -8,11 +9,35 @@ import { storeToRefs } from 'pinia'
 const isFetching = useIsFetching()
 const loaderStore = useLoaderStore()
 const { isLoading } = storeToRefs(loaderStore)
+
+const showLoader = ref(false)
+const loaderStartTime = ref<number | null>(null)
+
+const checkLoader = () => {
+  const loading = isLoading.value || isFetching.value > 0
+  
+  if (loading) {
+    if (!showLoader.value) {
+      showLoader.value = true
+      loaderStartTime.value = Date.now()
+    }
+  } else if (showLoader.value && loaderStartTime.value) {
+    const elapsed = Date.now() - loaderStartTime.value
+    if (elapsed >= 600) {
+      showLoader.value = false
+      loaderStartTime.value = null
+    }
+  }
+}
+
+onMounted(() => {
+  setInterval(checkLoader, 100)
+})
 </script>
 
 <template>
     <section
-        v-if="isLoading || isFetching"
+        v-if="showLoader"
         class="bg-black/75 fixed top-0 z-[999] flex items-center justify-center w-screen h-screen overflow-hidden"
     >
         <div class="loader"></div>
