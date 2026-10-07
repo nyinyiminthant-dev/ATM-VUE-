@@ -14,7 +14,7 @@ const goToBank = () => router.push({ name: 'bank' })
   <div class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
     <!-- Navigation Bar -->
     <header class="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -41,7 +41,7 @@ const goToBank = () => router.push({ name: 'bank' })
 
     <!-- Hero Section -->
     <main class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
-      <div class="max-w-5xl w-full">
+      <div class="w-full">
         <div class="text-center mb-16 animate-in">
           <div class="inline-flex items-center justify-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
             <Shield class="h-4 w-4" aria-hidden="true" />
@@ -58,7 +58,7 @@ const goToBank = () => router.push({ name: 'bank' })
         </div>
 
         <!-- Feature Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
           <!-- ATM Card -->
           <Card
             variant="elevated"
@@ -113,7 +113,7 @@ const goToBank = () => router.push({ name: 'bank' })
         </div>
 
         <!-- Features List -->
-        <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
           <div class="text-center p-6 rounded-xl bg-card border border-border/50 animate-in" style="animation-delay: 100ms">
             <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Shield class="h-6 w-6" aria-hidden="true" />
@@ -141,7 +141,7 @@ const goToBank = () => router.push({ name: 'bank' })
 
     <!-- Footer -->
     <footer class="border-t border-border/50 bg-background/50 backdrop-blur-sm py-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
+      <div class="w-full px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
         <p>&copy; 2026 Nyi Bank. All rights reserved.</p>
       </div>
     </footer>

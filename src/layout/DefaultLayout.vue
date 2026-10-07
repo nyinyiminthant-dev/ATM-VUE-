@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="w-svw min-h-svh flex justify-center ">
+    <div class="min-h-screen w-full">
         <RouterView />
     </div>
 </template>

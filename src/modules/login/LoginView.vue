@@ -92,8 +92,8 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6">
-    <div class="w-full max-w-md animate-in">
+  <div class="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6">
+    <div class="w-full max-w-md mx-auto animate-in">
       <Card variant="elevated" class="overflow-hidden">
         <CardHeader class="text-center pb-4 border-b border-border/50">
           <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">

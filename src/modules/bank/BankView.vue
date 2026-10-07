@@ -97,7 +97,7 @@ const getActionIconColor = (key: ComponentKey) => {
   <div class="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
     <!-- Header -->
     <header class="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center gap-3">
             <Button variant="ghost" size="icon" @click="$router.push('/')" class="md:hidden">
@@ -134,7 +134,7 @@ const getActionIconColor = (key: ComponentKey) => {
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="w-full px-4 sm:px-6 lg:px-8 py-8">
       <!-- Welcome Section -->
       <div class="mb-8 animate-in">
         <div class="flex items-center justify-between mb-4">
