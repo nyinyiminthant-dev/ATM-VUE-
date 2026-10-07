@@ -107,7 +107,7 @@ const getActionIconColor = (key: ComponentKey) => {
               <Building2 class="h-6 w-6" aria-hidden="true" />
             </div>
             <div>
-              <h1 class="font-bold text-lg text-foreground">Nyi Bank Dashboard</h1>
+              <h1 class="font-bold text-xl! text-foreground">Nyi Bank Dashboard</h1>
               <p class="text-xs text-muted-foreground">Bank Operations</p>
             </div>
           </div>

@@ -164,7 +164,7 @@ onMounted(() => {
               <CreditCard class="h-6 w-6" aria-hidden="true" />
             </div>
             <div>
-              <h1 class="font-bold text-lg text-foreground">ATM Services</h1>
+              <h1 class="font-bold text-xl! text-foreground">ATM Services</h1>
               <p class="text-xs text-muted-foreground">Account ending in {{ accountNumber.slice(-4) }}</p>
             </div>
           </div>
